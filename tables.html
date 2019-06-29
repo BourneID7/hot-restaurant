@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+  <div class="container">
+      <div class="jumbotron">
+              <h1 class="display-4 text-center">Restaurant Enfuego</h1>
+              <hr class="my-4">
+              <h2 class="text-center">Make Reservation</h2>
+              <div class="text-center">
+              <a class="btn btn-primary btn-lg" href="/" role="button">Home</a>
+              <a class="btn btn-primary btn-lg" href="/reserve" role="button">Reservations</a>
+              </div>
+            </div>
+
+
+      <div class="row">
+          <div class="col-lg-12">
+             <div class="card" style="width: 18rem;">
+                 <div class="card-header">
+                    Current Reservations
+                 </div>
+                 <ul class="list-group list-group-flush" id = "tables-section">
+                     <li class="list-group-item"></li>
+                 </ul>
+             </div>
+
+             <br>
+             <div class="card" style="width: 18rem;">
+                   <div class="card-header">
+                     Waiting List
+                   </div>
+                   <ul class="list-group list-group-flush" id = "waitlist-section">
+                     <li class="list-group-item"></li>
+                   </ul>
+                 </div>
+             </div>
+          </div>
+          <br>
+          <a class="btn btn-primary btn-lg"  role="button" id="clear">Clear</a>
+      </div>
+
+
+  <script type="text/javascript">
+
+    $.get("/api/tables", function(data) {
+      for (var i = 0; i < data.length; i++) {
+        console.log(data[i]);
+        var listGroupItem = $("<li class='list-group-item'>");
+          listGroupItem.append($("<hr>"));
+          listGroupItem.append($("<h2>").text("Name: " + data[i].name));
+          listGroupItem.append($("<h3>").text("Phone Number: " + data[i].phone));
+          listGroupItem.append($("<h3>").text("Email: " + data[i].email));
+          listGroupItem.append($("<h3>").text("ID: " + data[i].uniqueID));
+        $("#tables-section").append(listGroupItem);
+      }
+    });
+
+   
+
+      $.get("/api/waitlist", function(data) {
+      for (var i = 0; i < data.length; i++) {
+          console.log(data[i]);
+          var listGroupItem = $("<li class='list-group-item'>");
+          listGroupItem.append($("<hr>"));
+          listGroupItem.append($("<h2>").text("Name: " + data[i].name));
+          listGroupItem.append($("<h3>").text("Phone Number: " + data[i].phone));
+          listGroupItem.append($("<h3>").text("Email: " + data[i].email));
+          listGroupItem.append($("<h3>").text("ID: " + data[i].uniqueID));
+
+          $("#waitlist-section").append(listGroupItem);
+      }
+      });
+
+
+  //     function clearTable() {
+  //   	var currentURL = window.location.orgin;
+  //   	$.ajax([url, currentURL + "/api/clear", method, "POST"])}
+    
+
+  //   $("#clear").on('click', function() {
+	//     alert("Clearing...");
+	//     clearTable();
+
+	// location.reload();
+  //   })
+
+  function clearTable() {
+            $.post("/api/clear")
+        .then(function(data){
+            alert("Clearing...");
+
+        })};
+
+        $("#clear").on('click', function(event) {
+            event.preventDefault();
+            clearTable();
+            console.log("Clearing tables...")
+        });
+
+
+    </script>
+
+
+
+
+</body>
+</html>
